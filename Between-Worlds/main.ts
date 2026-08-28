@@ -1,5 +1,5 @@
-
-    
+import promptSync from 'prompt-sync';
+    const prompt = promptSync({ sigint: true }); 
     
 let opcao: number;
 
@@ -39,3 +39,7 @@ do {
             console.log("Opção inválida!");
     }
 } while (opcao !== 5);
+
+
+
+//npm i prompt-sync
