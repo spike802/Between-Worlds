@@ -6,7 +6,7 @@ export class Encadernacao {
 constructor(tipo: String ){
     this.tipo=tipo;
 
-    let book =new Encadernacao("Batman")
+   // let book =new Encadernacao("Batman")
     
 }
 }
