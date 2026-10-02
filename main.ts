@@ -59,10 +59,9 @@ function cadastrarLivro(book: Livro) {
     const autores = prompt("Digite o(s) autor(es) do livro: ") || "";
     const dataPubli = prompt("Digite a data de publicação do livro: ") || "";
     const paginas = Number(prompt("Digite o número de páginas do livro: ") || 0);
-    const conteudo = prompt("Digite o conteúdo do livro: ") || "";
     const ismbm = prompt("Digite o ISMBM do livro: ") || "";
 
-    book.cadastrarLivro(nome, descricao, preco, autores, dataPubli, paginas, conteudo, ismbm);
+    book.cadastrarLivro(nome, descricao, preco, autores, dataPubli, paginas, ismbm);
 }
 
 function cadastrarCliente(client: Cliente) {

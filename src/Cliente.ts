@@ -1,9 +1,9 @@
 export class Cliente {
-  cpf: string  ;
-  nome: string;
-  email:string;
-  endereco:string;
-  cep:string;
+  private cpf: string  ;
+  private nome: string;
+  private email:string;
+  private endereco:string;
+  private cep:string;
 
 constructor(){
     this.cpf ="";
