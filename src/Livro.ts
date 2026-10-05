@@ -3,39 +3,63 @@
 export class Livro {
 
     //campos/atributos
-    private nome: string;
-    private descricao: string;
+    private _nome: string;
+    private _descricao: string;
     private _preco: number;
-    private autores: string;
-    private dataPubli: string;
-    private paginas: number;
-    private ismbm: string;
+    private _autores: string;
+    private _dataPubli: string;
+    private _paginas: number;
+    private _ismbm: string;
     private _estoque: number;
 
 
     constructor() {
-        this.nome = "";
-        this.descricao = "";
+        this._nome = "";
+        this._descricao = "";
         this._preco = 0;
-        this.autores = "";
-        this.dataPubli = "";
-        this.paginas = 0;
-        this.ismbm = "";
+        this._autores = "";
+        this._dataPubli = "";
+        this._paginas = 0;
+        this._ismbm = "";
         this._estoque = 0;
     }
 
     cadastrarLivro(nome: string, descricao: string, preco: number, autores: string, dataPubli: string, paginas: number, ismbm: string): void {
-        this.nome = nome;
-        this.descricao = descricao;
+        this._nome = nome;
+        this._descricao = descricao;
         this._preco = preco;
-        this.autores = autores;
-        this.dataPubli = dataPubli;
-        this.paginas = paginas;
-        this.ismbm = ismbm;
+        this._autores = autores;
+        this._dataPubli = dataPubli;
+        this._paginas = paginas;
+        this._ismbm = ismbm;
+    }
+
+    public get nome(): string {
+        return this._nome;
+    }
+
+    public get descricao(): string {
+        return this._descricao;
     }
 
     public get preco(): number {
-        return this.preco;
+        return this._preco;
+    }
+
+    public get autores(): string {
+        return this._autores;
+    }
+
+    public get dataPubli(): string {
+        return this._dataPubli;
+    }
+
+    public get paginas(): number {
+        return this._paginas;
+    }
+
+    public get ismbm(): string {
+        return this._ismbm;
     }
 
     public set preco(preco: number) {

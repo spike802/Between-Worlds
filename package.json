@@ -18,6 +18,7 @@
     "@babel/preset-env": "^8.0.5",
     "@babel/preset-typescript": "^8.0.1",
     "@jest/globals": "^30.5.1",
+    "@types/node": "^26.6.4",
     "@types/prompt-sync": "^4.2.3",
     "babel-jest": "^30.5.1",
     "jest": "^30.5.1",
