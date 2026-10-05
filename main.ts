@@ -1,5 +1,6 @@
 //npm i prompt-sync
 import { Cliente } from './src/Cliente.ts';
+
 import { Livro } from './src/Livro.ts';
 import promptSync from 'prompt-sync';
 const prompt = promptSync({ sigint: true });
@@ -122,11 +123,15 @@ do {
             console.log("Cadastro de Usuarios");
             cadastrarCliente(client)
             break;
+
         case 6:
+            console.log("Mostrar clientes cadastrados");
+        case 7:
             console.log("Saindo do sistema...");
             break;
+
 
         default:
             console.log("Opção inválida!");
     }
-} while (opcao !== 6);
+} while (opcao !== 7);
