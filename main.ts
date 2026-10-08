@@ -34,36 +34,35 @@ function mostrarLivros(): void {
 
 
 
-// Função para salvar uma lista de livros no arquivo txt
+
 function salvarLivros(listaDeLivros: Livro[]) {
-    // Transforma cada livro em uma string separada por ponto e vírgula
+    
     const dados = listaDeLivros.map(livro => {
-        // Supondo que você consiga acessar as propriedades do livro. 
-        // Caso sejam privadas, você precisará de métodos "get" na classe Livro.
+       
         return `${livro.nome};${livro.descricao};${livro.preco};${livro.autores};${livro.dataPubli};${livro.paginas};${livro.ismbm};${livro.estoque}`;
     });
 
-    // Salva no arquivo
+    
     fs.writeFileSync("livros.txt", dados.join("\n"), "utf-8");
 }
 
-// Função para ler o arquivo txt e retornar um array de Livros
+
 function carregarLivros(): Livro[] {
     const livrosCarregados: Livro[] = [];
 
     if (fs.existsSync("livros.txt")) {
         const linhas = fs.readFileSync("livros.txt", "utf-8").split("\n");
 
-        // Usa for...of para iterar diretamente sobre os elementos, evitando o uso de índices [i]
+       
         for (const linha of linhas) {
             if (linha.trim() === "") continue;
 
             const partes = linha.split(";");
 
-            // Cria uma nova instância para cada linha lida
+           
             const novoLivro = new Livro();
 
-            // O uso de '|| ""' e '|| 0' garante que o TypeScript receba os tipos corretos
+            
             novoLivro.cadastrarLivro(
                 partes[0] || "",         // nome
                 partes[1] || "",         // descricao
@@ -81,8 +80,7 @@ function carregarLivros(): Livro[] {
     return livrosCarregados;
 }
 
-// ------------------------------------------- Uso no Programa Principal
-// Carrega os dados existentes assim que o programa inicia
+
 let meusLivros: Livro[] = carregarLivros();
 
 const book: Livro = new Livro();
@@ -97,8 +95,9 @@ function cadastrarLivro(book: Livro) {
     const paginas = Number(prompt("Digite o número de páginas do livro: ") || 0);
     const ismbm = prompt("Digite o ISMBM do livro: ") || "";
     const estoque = Number(prompt("Digite a quantidade em estoque do livro: ") || 0);
+    
 
-    book.cadastrarLivro(nome, descricao, preco, autores, dataPubli, paginas, ismbm, estoque);
+    book.cadastrarLivro(nome, descricao, preco, autores, dataPubli, paginas, ismbm, estoque, true);
 
     meusLivros.push(book);
     salvarLivros(meusLivros);

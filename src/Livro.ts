@@ -11,6 +11,7 @@ export class Livro {
     private _paginas: number;
     private _ismbm: string;
     private _estoque: number;
+    private _digital:boolean|null
 
 
     constructor() {
@@ -22,9 +23,10 @@ export class Livro {
         this._paginas = 0;
         this._ismbm = "";
         this._estoque = 0;
+        this._digital = null;
     }
 
-    cadastrarLivro(nome: string, descricao: string, preco: number, autores: string, dataPubli: string, paginas: number, ismbm: string, estoque: number = 0): void {
+    cadastrarLivro(nome: string, descricao: string, preco: number, autores: string, dataPubli: string, paginas: number, ismbm: string, estoque: number = 0, digital:boolean): void {
         this._nome = nome;
         this._descricao = descricao;
         this._preco = preco;
@@ -33,6 +35,7 @@ export class Livro {
         this._paginas = paginas;
         this._ismbm = ismbm;
         this._estoque = estoque;
+        this._digital = digital;
     }
 
     public get nome(): string {

@@ -1,7 +1,6 @@
-;;0;;;0;;0
-;;0;;;0;;0
-;;0;;;0;;0
 Batman;inrivel;NaN;thomas;12/02/2026;284;4465465;0
 superman;jnjnjnjnjnjn;225;thomas;11/02/2025;359;465464654;0
 Senhor dos aneis ;legal;125;Tokken;24/08/1998;720;464654654564;0
 Blue Lock ;Otimo;50;Yusuke;15/09/2026;256;46554646;50
+Batman Begins;Batman;98.56;Nolan;12/05/2022;254;6546465465;50
+bleach;hsdaoih;60.25;Kubo;08/10/2026;500;4654654;50
