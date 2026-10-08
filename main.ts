@@ -27,6 +27,7 @@ function mostrarLivros(): void {
         console.log(`Data de publicação: ${livro.dataPubli}`);
         console.log(`Número de páginas: ${livro.paginas}`);
         console.log(`ISBN: ${livro.ismbm}`);
+        console.log(`Estoque: ${livro.estoque}`);
         console.log("--------------------------------");
     }
 }
@@ -39,7 +40,7 @@ function salvarLivros(listaDeLivros: Livro[]) {
     const dados = listaDeLivros.map(livro => {
         // Supondo que você consiga acessar as propriedades do livro. 
         // Caso sejam privadas, você precisará de métodos "get" na classe Livro.
-        return `${livro.nome};${livro.descricao};${livro.preco};${livro.autores};${livro.dataPubli};${livro.paginas};${livro.ismbm}`;
+        return `${livro.nome};${livro.descricao};${livro.preco};${livro.autores};${livro.dataPubli};${livro.paginas};${livro.ismbm};${livro.estoque}`;
     });
 
     // Salva no arquivo
@@ -70,7 +71,8 @@ function carregarLivros(): Livro[] {
                 partes[3] || "",         // autores
                 partes[4] || "",         // dataPubli
                 Number(partes[5] || 0),  // paginas
-                partes[6] || ""          // ismbm
+                partes[6] || "",         // ismbm
+                Number(partes[7] || 0)   // estoque
             );
 
             livrosCarregados.push(novoLivro);
@@ -94,8 +96,9 @@ function cadastrarLivro(book: Livro) {
     const dataPubli = prompt("Digite a data de publicação do livro: ") || "";
     const paginas = Number(prompt("Digite o número de páginas do livro: ") || 0);
     const ismbm = prompt("Digite o ISMBM do livro: ") || "";
+    const estoque = Number(prompt("Digite a quantidade em estoque do livro: ") || 0);
 
-    book.cadastrarLivro(nome, descricao, preco, autores, dataPubli, paginas, ismbm);
+    book.cadastrarLivro(nome, descricao, preco, autores, dataPubli, paginas, ismbm, estoque);
 
     meusLivros.push(book);
     salvarLivros(meusLivros);

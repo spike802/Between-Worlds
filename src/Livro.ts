@@ -24,7 +24,7 @@ export class Livro {
         this._estoque = 0;
     }
 
-    cadastrarLivro(nome: string, descricao: string, preco: number, autores: string, dataPubli: string, paginas: number, ismbm: string): void {
+    cadastrarLivro(nome: string, descricao: string, preco: number, autores: string, dataPubli: string, paginas: number, ismbm: string, estoque: number = 0): void {
         this._nome = nome;
         this._descricao = descricao;
         this._preco = preco;
@@ -32,6 +32,7 @@ export class Livro {
         this._dataPubli = dataPubli;
         this._paginas = paginas;
         this._ismbm = ismbm;
+        this._estoque = estoque;
     }
 
     public get nome(): string {
@@ -68,6 +69,9 @@ export class Livro {
         }
         this._preco = preco;
     }
+    public get estoque(): number {
+        return this._estoque;
+    }
 
     aplicarDesconto(porcentagem: number) {
         this._preco = this._preco - (this._preco * (porcentagem / 100));
@@ -75,6 +79,9 @@ export class Livro {
 
 
     vender(quantidade: number): void {
+        if (quantidade > this._estoque) {
+            throw new Error("Estoque insuficiente");
+        }
         this._estoque -= quantidade;
 
     }
