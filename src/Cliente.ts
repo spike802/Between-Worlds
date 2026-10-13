@@ -1,34 +1,26 @@
 export class Cliente {
-<<<<<<< HEAD
-  private cpf: string  ;
-  private nome: string;
-  private email:string;
-  private endereco:string;
-  private cep:string;
-=======
-  cpf: string  ;
-  nome: string;
-  email:string;
-  endereco:string;
-  cep:string;
->>>>>>> 2e7f3fd44e4cf503b0f1b6b0f91b9ed71f97686e
+  private _cpf: string  ;
+  private _nome: string;
+  private _email:string;
+  private _endereco:string;
+  private _cep:string;
 
 constructor(){
-    this.cpf ="";
-    this.nome ="";
-    this.email ="";
-    this.endereco ="";
-    this.cep ="";
+    this._cpf ="";
+    this._nome ="";
+    this._email ="";
+    this._endereco ="";
+    this._cep ="";
     
 }
 
 
 cadastrarCliente( cpf: string, nome: string, email:string, endereco:string,cep:string):void{  
-this.cpf = cpf
-this.nome = nome
-this.email = email
-this.endereco = endereco
-this.cep = cep
+this._cpf = cpf
+this._nome = nome
+this._email = email
+this._endereco = endereco
+this._cep = cep
 
 }
 

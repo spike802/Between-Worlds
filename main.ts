@@ -1,6 +1,6 @@
 //npm i prompt-sync
 import { Cliente } from './src/Cliente.ts';
-
+import { Vendas } from './src/Vendas.ts';
 import { Livro } from './src/Livro.ts';
 import promptSync from 'prompt-sync';
 const prompt = promptSync({ sigint: true });
@@ -11,43 +11,44 @@ import * as fs from 'fs';
 
 
 
-
+// Função para salvar uma lista de livros no arquivo txt
 function salvarLivros(listaDeLivros: Livro[]) {
-   
+    // Transforma cada livro em uma string separada por ponto e vírgula
     const dados = listaDeLivros.map(livro => {
-        
+        // Supondo que você consiga acessar as propriedades do livro. 
+        // Caso sejam privadas, você precisará de métodos "get" na classe Livro.
         return `${livro.nome};${livro.descricao};${livro.preco};${livro.autores};${livro.dataPubli};${livro.paginas};${livro.ismbm}`;
     });
 
-   
+    // Salva no arquivo
     fs.writeFileSync("livros.txt", dados.join("\n"), "utf-8");
 }
 
-
+// Função para ler o arquivo txt e retornar um array de Livros
 function carregarLivros(): Livro[] {
     const livrosCarregados: Livro[] = [];
 
     if (fs.existsSync("livros.txt")) {
         const linhas = fs.readFileSync("livros.txt", "utf-8").split("\n");
 
-       
+        // Usa for...of para iterar diretamente sobre os elementos, evitando o uso de índices [i]
         for (const linha of linhas) {
             if (linha.trim() === "") continue;
 
             const partes = linha.split(";");
 
-          
+            // Cria uma nova instância para cada linha lida
             const novoLivro = new Livro();
             
-           
+            // O uso de '|| ""' e '|| 0' garante que o TypeScript receba os tipos corretos
             novoLivro.cadastrarLivro(
-                partes[0] || "",         
-                partes[1] || "",         
-                Number(partes[2] || 0),  
-                partes[3] || "",         
-                partes[4] || "",         
-                Number(partes[5] || 0),  
-                partes[6] || ""          
+                partes[0] || "",         // nome
+                partes[1] || "",         // descricao
+                Number(partes[2] || 0),  // preco
+                partes[3] || "",         // autores
+                partes[4] || "",         // dataPubli
+                Number(partes[5] || 0),  // paginas
+                partes[6] || ""          // ismbm
             );
 
             livrosCarregados.push(novoLivro);
@@ -56,6 +57,8 @@ function carregarLivros(): Livro[] {
     return livrosCarregados;
 }
 
+// ------------------------------------------- Uso no Programa Principal
+// Carrega os dados existentes assim que o programa inicia
 let meusLivros: Livro[] = carregarLivros();
 
 const book: Livro = new Livro();
