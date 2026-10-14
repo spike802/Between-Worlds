@@ -24,7 +24,7 @@ export class Livro {
         this._estoque = 0;
     }
 
-    cadastrarLivro(nome: string, descricao: string, preco: number, autores: string, dataPubli: string, paginas: number, ismbm: string): void {
+    cadastrarLivro(nome: string, descricao: string, preco: number, autores: string, dataPubli: string, paginas: number, ismbm: string, estoque: number = 0): void {
         this._nome = nome;
         this._descricao = descricao;
         this._preco = preco;
@@ -32,51 +32,49 @@ export class Livro {
         this._dataPubli = dataPubli;
         this._paginas = paginas;
         this._ismbm = ismbm;
+        this._estoque = estoque;
     }
 
-    
     public set preco(preco: number) {
         if (preco < 0 || preco > 100_000_000) {
             throw new Error("Preço inválido");
         }
         this._preco = preco;
     }
-    
-    aplicarDesconto(porcentagem: number) {
-        this._preco = this._preco - (this._preco * (porcentagem / 100));
-    }
-    
-    
-    vender(quantidade: number): void {
+
+    public reduzirEstoque(quantidade: number): void {
         this._estoque -= quantidade;
-        
     }
-    
+
     public get nome(): string {
         return this._nome;
     }
-    
+
     public get descricao(): string {
         return this._descricao;
     }
-    
+
     public get preco(): number {
         return this._preco;
     }
-    
+
     public get autores(): string {
         return this._autores;
     }
-    
+
     public get dataPubli(): string {
         return this._dataPubli;
     }
-    
+
     public get paginas(): number {
         return this._paginas;
     }
-    
+
     public get ismbm(): string {
         return this._ismbm;
+    }
+
+    public get estoque(): number {
+        return this._estoque;
     }
 }
