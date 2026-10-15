@@ -12,11 +12,6 @@ export class Vendas {
         this._cliente = new Cliente;
     }
 
-
-    aplicarDesconto(porcentagem: number) {
-        this._livro.preco = this._livro.preco - (this._livro.preco * (porcentagem / 100));
-    }
-
     vender(quantidade: number): void {
         if (quantidade > this._livro.estoque) {
             throw new Error("Estoque insuficiente");
@@ -24,4 +19,5 @@ export class Vendas {
         this._livro.reduzirEstoque(quantidade);
     }
 
+    
 }
