@@ -15,6 +15,75 @@ const vendas: Vendas = new Vendas();
 
 
 
+function aplicarDescontoLivro(): void {
+    console.log("\n========== APLICAR DESCONTO ==========");
+
+    if (meusLivros.length === 0) {
+        console.log("Nenhum livro cadastrado.");
+        return;
+    }
+
+    // Mostra os livros com nome, ISBN e preço
+    const livrosTabela = meusLivros.map((livro) => ({
+        Nome: livro.nome,
+        ISBN: livro.ismbm,
+        Preço: `R$ ${livro.preco.toFixed(2)}`
+    }));
+
+    console.table(livrosTabela);
+
+    // Seleciona o livro pelo ISBN
+    const isbn = prompt(
+        "Digite o ISBN do livro que deseja selecionar: "
+    ) || "";
+
+    const livroEncontrado = meusLivros.find(
+        livro => livro.ismbm === isbn
+    );
+
+    if (!livroEncontrado) {
+        console.log("Erro: Livro não encontrado.");
+        return;
+    }
+
+    console.log(`\nLivro selecionado: ${livroEncontrado.nome}`);
+    console.log(`ISBN: ${livroEncontrado.ismbm}`);
+    console.log(`Preço atual: R$ ${livroEncontrado.preco.toFixed(2)}`);
+
+    // Solicita a porcentagem do desconto
+    const porcentagem = Number(
+        prompt("Digite a porcentagem de desconto (1 a 100): ")
+    );
+
+    if (
+        !Number.isFinite(porcentagem) ||
+        porcentagem <= 0 ||
+        porcentagem > 100
+    ) {
+        console.log("Porcentagem inválida!");
+        return;
+    }
+
+    const precoOriginal = livroEncontrado.preco;
+    const desconto = precoOriginal * (porcentagem / 100);
+
+    livroEncontrado.preco = Number(
+        (precoOriginal - desconto).toFixed(2)
+    );
+
+    // Salva o preço atualizado
+    salvarLivros(meusLivros);
+
+    console.log("\n========== DESCONTO APLICADO ==========");
+    console.log(`Livro: ${livroEncontrado.nome}`);
+    console.log(`Preço original: R$ ${precoOriginal.toFixed(2)}`);
+    console.log(`Desconto aplicado: ${porcentagem}%`);
+    console.log(`Valor descontado: R$ ${desconto.toFixed(2)}`);
+    console.log(`Novo preço: R$ ${livroEncontrado.preco.toFixed(2)}`);
+}
+
+
+
 function salvarLivros(listaDeLivros: Livro[]) {
 
     const dados = listaDeLivros.map(livro => {
@@ -94,27 +163,38 @@ function cadastrarCliente(client: Cliente) {
     client.cadastrarCliente(cpf, nome, email, endereco, cep);
 }
 
+
+
 function mostrarLivros(): void {
     console.log("\n========== MOSTRUÁRIO ==========");
 
+    // Verifica se existem livros cadastrados
     if (meusLivros.length === 0) {
         console.log("Nenhum livro cadastrado.");
         return;
     }
 
-    for (const livro of meusLivros) {
-        console.log("\n--------------------------------");
-        console.log(`Nome: ${livro.nome}`);
-        console.log(`Descrição: ${livro.descricao}`);
-        console.log(`Preço: R$ ${livro.preco}`);
-        console.log(`Autor(es): ${livro.autores}`);
-        console.log(`Data de publicação: ${livro.dataPubli}`);
-        console.log(`Número de páginas: ${livro.paginas}`);
-        console.log(`ISBN: ${livro.ismbm}`);
-        console.log(`Estoque: ${livro.estoque}`);
-        console.log("--------------------------------");
-    }
+    
+    const livrosTabela = Object.fromEntries(
+        meusLivros.map((livro) => [
+            livro.ismbm,
+            {
+                Nome: livro.nome,
+                Descrição: livro.descricao,
+                Preço: `R$ ${livro.preco}`,
+                "Autor(es)": livro.autores,
+                "Data de publicação": livro.dataPubli,
+                "Número de páginas": livro.paginas,
+                Estoque: livro.estoque
+            }
+        ])
+    );
+
+    // Exibe os livros em formato de tabela
+    console.table(livrosTabela);
 }
+
+
 
 function vender(vendas: Vendas): void {
     console.log("\n========== CARRINHO ==========");
@@ -144,18 +224,19 @@ function vender(vendas: Vendas): void {
     }
 }
 
+
 do {
     console.log("\n===== LIVRARIA =====");
     console.log("1 - Cadastro de produtos");
     console.log("2 - Mostruário");
     console.log("3 - Sistema de venda");
     console.log("4 - Sistema de busca");
-    console.log("5 - Cadastrar de usuário");
+    console.log("5 - Cadastrar usuário");
     console.log("6 - Mostrar clientes cadastrados");
-    console.log("7 - Sair");
+    console.log("7 - Aplicar desconto em um livro");
+    console.log("8 - Sair");
 
-
-    opcao = Number(prompt("Escolha uma opção:"));
+    opcao = Number(prompt("Escolha uma opção: "));
 
     switch (opcao) {
         case 1:
@@ -177,18 +258,24 @@ do {
             break;
 
         case 5:
-            console.log("Cadastro de Usuarios");
-            cadastrarCliente(client)
+            console.log("Cadastro de usuários");
+            cadastrarCliente(client);
             break;
 
         case 6:
             console.log("Mostrar clientes cadastrados");
             break;
+
         case 7:
+            aplicarDescontoLivro();
+            break;
+
+        case 8:
             console.log("Saindo do sistema...");
             break;
 
         default:
             console.log("Opção inválida!");
     }
-} while (opcao !== 7);
+
+} while (opcao !== 8);
