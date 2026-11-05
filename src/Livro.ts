@@ -1,61 +1,30 @@
+import { Produtos } from "./Produto.ts";
 
-//classe
-export class Livro {
-
-    //campos/atributos
-    private _nome: string;
-    private _descricao: string;
-    private _preco: number;
+export class Livro extends Produtos {
+   
     private _autores: string;
     private _dataPubli: string;
     private _paginas: number;
     private _ismbm: string;
-    private _estoque: number;
-
 
     constructor() {
-        this._nome = "";
-        this._descricao = "";
-        this._preco = 0;
+        super(); 
         this._autores = "";
         this._dataPubli = "";
         this._paginas = 0;
         this._ismbm = "";
-        this._estoque = 0;
     }
 
     cadastrarLivro(nome: string, descricao: string, preco: number, autores: string, dataPubli: string, paginas: number, ismbm: string, estoque: number = 0): void {
+        // Atributos herdados
         this._nome = nome;
         this._descricao = descricao;
-        this._preco = preco;
+        this.preco = preco; 
+        this._estoque = estoque;
         this._autores = autores;
         this._dataPubli = dataPubli;
         this._paginas = paginas;
         this._ismbm = ismbm;
-        this._estoque = estoque;
-    }
-
-    public set preco(preco: number) {
-        if (preco < 0 || preco > 100_000_000) {
-            throw new Error("Preço inválido");
-        }
-        this._preco = preco;
-    }
-
-    public reduzirEstoque(quantidade: number): void {
-        this._estoque -= quantidade;
-    }
-
-    public get nome(): string {
-        return this._nome;
-    }
-
-    public get descricao(): string {
-        return this._descricao;
-    }
-
-    public get preco(): number {
-        return this._preco;
     }
 
     public get autores(): string {
@@ -72,9 +41,5 @@ export class Livro {
 
     public get ismbm(): string {
         return this._ismbm;
-    }
-
-    public get estoque(): number {
-        return this._estoque;
     }
 }
