@@ -1,10 +1,3 @@
-//O tornar a superclasse, para criar outros produtos derivados, 
-
-// produtos:
-// Livro
-// ActionFigure
-// figurinhas
-
 export class Produtos {
     
     protected _nome: string;
@@ -19,6 +12,12 @@ export class Produtos {
         this._estoque = 0;
     }
 
+    public adicionarEstoque(quantidade: number): void {
+        if (quantidade <= 0) {
+            throw new Error("Quantidade inválida para reposição.");
+        }
+        this._estoque += quantidade;
+    }
     public set preco(preco: number) {
         if (preco < 0 || preco > 100_000_000) {
             throw new Error("Preço inválido");

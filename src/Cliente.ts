@@ -23,5 +23,20 @@ this._endereco = endereco
 this._cep = cep
 
 }
+public get cpf(): string {
+        return this._cpf;
+    }
+public get nome(): string {
+        return this._nome;
+    }
+public get email(): string {
+        return this._email;
+    }
+public get endereco(): string {
+        return this._endereco;
+    }
+public get cep(): string {
+        return this._cep;
+    }
 
 }

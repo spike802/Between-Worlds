@@ -16,7 +16,6 @@ export class Livro extends Produtos {
     }
 
     cadastrarLivro(nome: string, descricao: string, preco: number, autores: string, dataPubli: string, paginas: number, ismbm: string, estoque: number = 0): void {
-        // Atributos herdados
         this._nome = nome;
         this._descricao = descricao;
         this.preco = preco; 
