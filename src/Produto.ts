@@ -1,5 +1,6 @@
 export class Produtos {
-    
+    private static readonly PRECO_MAXIMO = 100_000_000;
+
     protected _nome: string;
     protected _descricao: string;
     protected _preco: number;
@@ -12,21 +13,36 @@ export class Produtos {
         this._estoque = 0;
     }
 
-    public adicionarEstoque(quantidade: number): void {
-        if (quantidade <= 0) {
-            throw new Error("Quantidade inválida para reposição.");
+    public set preco(valor: number) {
+        if (!Number.isFinite(valor) || valor < 0 || valor > Produtos.PRECO_MAXIMO) {
+            throw new Error("Preço inválido.");
         }
-        this._estoque += quantidade;
+        this._preco = valor;
     }
-    public set preco(preco: number) {
-        if (preco < 0 || preco > 100_000_000) {
-            throw new Error("Preço inválido");
+
+    public aplicarDesconto(porcentagem: number): void {
+        if (!Number.isFinite(porcentagem) || porcentagem <= 0 || porcentagem > 100) {
+            throw new Error("Porcentagem de desconto inválida.");
         }
-        this._preco = preco;
+        const valorDesconto = this._preco * (porcentagem / 100);
+        this.preco = Number((this._preco - valorDesconto).toFixed(2));
     }
 
     public reduzirEstoque(quantidade: number): void {
+        if (!Number.isFinite(quantidade) || quantidade <= 0) {
+            throw new Error("Quantidade inválida para baixa de estoque.");
+        }
+        if (quantidade > this._estoque) {
+            throw new Error("Estoque insuficiente.");
+        }
         this._estoque -= quantidade;
+    }
+
+    public adicionarEstoque(quantidade: number): void {
+        if (!Number.isFinite(quantidade) || quantidade <= 0) {
+            throw new Error("Quantidade inválida para reposição.");
+        }
+        this._estoque += quantidade;
     }
 
     public get nome(): string {

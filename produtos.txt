@@ -1,1 +1,1 @@
-LIVRO;Batman;Espancador de criminosos;76.08;John Nolan;22/09/2005;34;3153678;180
+LIVRO;Batman;Espancador de criminosos;76.08;John Nolan;22/09/2005;34;3153678;169

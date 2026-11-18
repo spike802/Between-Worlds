@@ -1,44 +1,52 @@
 import { Produtos } from "./Produto.ts";
 
 export class Livro extends Produtos {
-   
     private _autores: string;
-    private _dataPubli: string;
+    private _dataPublicacao: string;
     private _paginas: number;
-    private _ismbm: string;
+    private _isbn: string;
 
     constructor() {
-        super(); 
+        super();
         this._autores = "";
-        this._dataPubli = "";
+        this._dataPublicacao = "";
         this._paginas = 0;
-        this._ismbm = "";
+        this._isbn = "";
     }
 
-    cadastrarLivro(nome: string, descricao: string, preco: number, autores: string, dataPubli: string, paginas: number, ismbm: string, estoque: number = 0): void {
+    public cadastrarLivro(
+        nome: string,
+        descricao: string,
+        preco: number,
+        autores: string,
+        dataPublicacao: string,
+        paginas: number,
+        isbn: string,
+        estoque: number = 0
+    ): void {
         this._nome = nome;
         this._descricao = descricao;
-        this.preco = preco; 
+        this.preco = preco;
         this._estoque = estoque;
         this._autores = autores;
-        this._dataPubli = dataPubli;
+        this._dataPublicacao = dataPublicacao;
         this._paginas = paginas;
-        this._ismbm = ismbm;
+        this._isbn = isbn;
     }
 
     public get autores(): string {
         return this._autores;
     }
 
-    public get dataPubli(): string {
-        return this._dataPubli;
+    public get dataPublicacao(): string {
+        return this._dataPublicacao;
     }
 
     public get paginas(): number {
         return this._paginas;
     }
 
-    public get ismbm(): string {
-        return this._ismbm;
+    public get isbn(): string {
+        return this._isbn;
     }
 }
