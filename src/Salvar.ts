@@ -6,23 +6,16 @@ import { Produtos } from './Produto.ts';
 import { Cliente } from './Cliente.ts';
 import { Vendas } from './Vendas.ts';
 
-function limparSeparador(texto: string): string {
-    return texto.replace(/;/g, ",");
-}
-
-export function salvarProdutos(listaDeProdutos: Produtos[]): void {
+export function salvarProdutos(lista: Produtos[]): void {
     const linhas: string[] = [];
 
-    for (const item of listaDeProdutos) {
-        const nome = limparSeparador(item.nome);
-        const descricao = limparSeparador(item.descricao);
-
+    for (const item of lista) {
         if (item instanceof Livro) {
-            linhas.push(`LIVRO;${nome};${descricao};${item.preco};${limparSeparador(item.autores)};${limparSeparador(item.dataPublicacao)};${item.paginas};${limparSeparador(item.isbn)};${item.estoque}`);
+            linhas.push(`LIVRO;${item.nome};${item.descricao};${item.preco};${item.autores};${item.dataPubli};${item.paginas};${item.isbn};${item.estoque}`);
         } else if (item instanceof ActionFigure) {
-            linhas.push(`ACTION_FIGURE;${nome};${descricao};${item.preco};${limparSeparador(item.franquia)};${limparSeparador(item.material)};${item.estoque}`);
+            linhas.push(`ACTION_FIGURE;${item.nome};${item.descricao};${item.preco};${item.material};${item.estoque}`);
         } else if (item instanceof Figurinha) {
-            linhas.push(`FIGURINHA;${nome};${descricao};${item.preco};${limparSeparador(item.colecao)};${limparSeparador(item.raridade)};${item.estoque}`);
+            linhas.push(`FIGURINHA;${item.nome};${item.descricao};${item.preco};${item.colecao};${item.raridade};${item.estoque}`);
         }
     }
 
@@ -30,141 +23,130 @@ export function salvarProdutos(listaDeProdutos: Produtos[]): void {
 }
 
 export function carregarProdutos(): Produtos[] {
-    const produtosCarregados: Produtos[] = [];
+    const lista: Produtos[] = [];
 
     if (!fs.existsSync("produtos.txt")) {
-        return produtosCarregados;
+        return lista;
     }
 
     const linhas = fs.readFileSync("produtos.txt", "utf-8").split("\n");
 
     for (const linha of linhas) {
         if (linha.trim() === "") continue;
+        const dados = linha.split(";");
 
-        const colunas = linha.split(";");
-        const tipoProduto = colunas[0];
-
-        if (tipoProduto === "LIVRO") {
+        if (dados[0] === "LIVRO") {
             const livro = new Livro();
             livro.cadastrarLivro(
-                colunas[1] || "",
-                colunas[2] || "",
-                Number(colunas[3] || 0),
-                colunas[4] || "",
-                colunas[5] || "",
-                Number(colunas[6] || 0),
-                colunas[7] || "",
-                Number(colunas[8] || 0)
+                dados[1] || "",
+                dados[2] || "",
+                Number(dados[3] || 0),
+                dados[4] || "",
+                dados[5] || "",
+                Number(dados[6] || 0),
+                dados[7] || "",
+                Number(dados[8] || 0)
             );
-            produtosCarregados.push(livro);
-        } else if (tipoProduto === "ACTION_FIGURE") {
-            const actionFigure = new ActionFigure();
-            actionFigure.cadastrarActionFigure(
-                colunas[1] || "",
-                colunas[2] || "",
-                Number(colunas[3] || 0),
-                colunas[4] || "",
-                colunas[5] || "",
-                Number(colunas[6] || 0)
+            lista.push(livro);
+        } else if (dados[0] === "ACTION_FIGURE") {
+            const af = new ActionFigure();
+            af.cadastrarActionFigure(
+                dados[1] || "",
+                dados[2] || "",
+                Number(dados[3] || 0),
+                dados[4] || "",
+                Number(dados[5] || 0)
             );
-            produtosCarregados.push(actionFigure);
-        } else if (tipoProduto === "FIGURINHA") {
-            const figurinha = new Figurinha();
-            figurinha.cadastrarFigurinha(
-                colunas[1] || "",
-                colunas[2] || "",
-                Number(colunas[3] || 0),
-                colunas[4] || "",
-                colunas[5] || "",
-                Number(colunas[6] || 0)
+            lista.push(af);
+        } else if (dados[0] === "FIGURINHA") {
+            const fig = new Figurinha();
+            fig.cadastrarFigurinha(
+                dados[1] || "",
+                dados[2] || "",
+                Number(dados[3] || 0),
+                dados[4] || "",
+                dados[5] || "",
+                Number(dados[6] || 0)
             );
-            produtosCarregados.push(figurinha);
+            lista.push(fig);
         }
     }
 
-    return produtosCarregados;
+    return lista;
 }
 
-export function salvarClientes(listaDeClientes: Cliente[]): void {
-    const linhas = listaDeClientes.map(cliente => {
-        return `${limparSeparador(cliente.cpf)};${limparSeparador(cliente.nome)};${limparSeparador(cliente.email)};${limparSeparador(cliente.endereco)};${limparSeparador(cliente.cep)}`;
-    });
+export function salvarClientes(lista: Cliente[]): void {
+    const linhas: string[] = [];
+
+    for (const cliente of lista) {
+        linhas.push(`${cliente.cpf};${cliente.nome};${cliente.email};${cliente.endereco};${cliente.cep}`);
+    }
 
     fs.writeFileSync("clientes.txt", linhas.join("\n"), "utf-8");
 }
 
 export function carregarClientes(): Cliente[] {
-    const clientesCarregados: Cliente[] = [];
+    const lista: Cliente[] = [];
 
     if (!fs.existsSync("clientes.txt")) {
-        return clientesCarregados;
+        return lista;
     }
 
     const linhas = fs.readFileSync("clientes.txt", "utf-8").split("\n");
 
     for (const linha of linhas) {
         if (linha.trim() === "") continue;
+        const dados = linha.split(";");
 
-        const colunas = linha.split(";");
         const cliente = new Cliente();
-
         cliente.cadastrarCliente(
-            colunas[0] || "",
-            colunas[1] || "",
-            colunas[2] || "",
-            colunas[3] || "",
-            colunas[4] || ""
+            dados[0] || "",
+            dados[1] || "",
+            dados[2] || "",
+            dados[3] || "",
+            dados[4] || ""
         );
-
-        clientesCarregados.push(cliente);
+        lista.push(cliente);
     }
 
-    return clientesCarregados;
+    return lista;
 }
 
-export function salvarVendas(listaDeVendas: Vendas[]): void {
-    const linhas = listaDeVendas.map(venda => {
-        return `${venda.data};${limparSeparador(venda.cliente.cpf)};${limparSeparador(venda.cliente.nome)};${limparSeparador(venda.produto.nome)};${venda.quantidade};${venda.valorTotal}`;
-    });
+export function salvarVendas(lista: Vendas[]): void {
+    const linhas: string[] = [];
+
+    for (const venda of lista) {
+        linhas.push(`${venda.data};${venda.cliente.cpf};${venda.cliente.nome};${venda.produto.nome};${venda.quantidade};${venda.valorTotal}`);
+    }
 
     fs.writeFileSync("vendas.txt", linhas.join("\n"), "utf-8");
 }
 
 export function carregarVendas(produtos: Produtos[], clientes: Cliente[]): Vendas[] {
-    const vendasCarregadas: Vendas[] = [];
+    const lista: Vendas[] = [];
 
     if (!fs.existsSync("vendas.txt")) {
-        return vendasCarregadas;
+        return lista;
     }
 
     const linhas = fs.readFileSync("vendas.txt", "utf-8").split("\n");
 
     for (const linha of linhas) {
         if (linha.trim() === "") continue;
+        const dados = linha.split(";");
 
-        const colunas = linha.split(";");
-        const data = colunas[0] || "";
-        const cpfCliente = colunas[1] || "";
-        const nomeCliente = colunas[2] || "";
-        const nomeProduto = colunas[3] || "";
-        const quantidade = Number(colunas[4] || 0);
-        const valorTotalSalvo = Number(colunas[5] || 0);
+        const cliente = new Cliente();
+        cliente.cadastrarCliente(dados[1] || "", dados[2] || "", "", "", "");
 
-        let cliente = clientes.find(item => item.cpf === cpfCliente);
-        if (!cliente) {
-            cliente = new Cliente();
-            cliente.cadastrarCliente(cpfCliente, nomeCliente, "", "", "");
-        }
+        const quantidade = Number(dados[4] || 0);
+        const valorTotal = Number(dados[5] || 0);
 
-        let produto = produtos.find(item => item.nome === nomeProduto);
-        if (!produto) {
-            produto = new Produtos();
-            produto.preco = quantidade > 0 ? valorTotalSalvo / quantidade : 0;
-        }
+        const produto = new Produtos();
+        produto.preco = quantidade > 0 ? valorTotal / quantidade : 0;
 
-        const venda = new Vendas(produto, cliente, quantidade, data);
-        vendasCarregadas.push(venda);
+        const venda = new Vendas(produto, cliente, quantidade, dados[0] || "");
+        lista.push(venda);
     }
 
-    return vendasCarregadas;
+    return lista;
 }

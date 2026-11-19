@@ -9,302 +9,204 @@ import { salvarProdutos, carregarProdutos, salvarClientes, carregarClientes, sal
 
 const prompt = promptSync({ sigint: true });
 
-const listaProdutos: Produtos[] = carregarProdutos();
-const listaClientes: Cliente[] = carregarClientes();
-const listaVendas: Vendas[] = carregarVendas(listaProdutos, listaClientes);
-
-function lerDadosBaseProduto() {
-    const nome = prompt("Nome do produto: ") || "";
-    const descricao = prompt("Descrição: ") || "";
-    const preco = Number(prompt("Preço: ") || 0);
-    const estoque = Number(prompt("Quantidade em estoque: ") || 0);
-
-    return { nome, descricao, preco, estoque };
-}
-
-function exibirTabelaProdutos(produtos: Produtos[]): void {
-    const linhasTabela = produtos.map((produto, posicao) => {
-        let categoria = "Produto";
-        let especificacoes = "";
-
-        if (produto instanceof Livro) {
-            categoria = "Livro";
-            especificacoes = `Autor: ${produto.autores} | Págs: ${produto.paginas} | ISBN: ${produto.isbn}`;
-        } else if (produto instanceof ActionFigure) {
-            categoria = "Action Figure";
-            especificacoes = `Franquia: ${produto.franquia} | Material: ${produto.material}`;
-        } else if (produto instanceof Figurinha) {
-            categoria = "Figurinha";
-            especificacoes = `Coleção: ${produto.colecao} | Raridade: ${produto.raridade}`;
-        }
-
-        return {
-            Número: posicao + 1,
-            Categoria: categoria,
-            Nome: produto.nome,
-            Preço: `R$ ${produto.preco.toFixed(2)}`,
-            Estoque: produto.estoque,
-            Especificações: especificacoes
-        };
-    });
-
-    console.table(linhasTabela);
-}
-
-function selecionarProdutoPorNumero(): Produtos | undefined {
-    exibirTabelaProdutos(listaProdutos);
-    const numeroEscolhido = Number(prompt("Digite o Número do produto: "));
-    return listaProdutos[numeroEscolhido - 1];
-}
+const meusProdutos: Produtos[] = carregarProdutos();
+const meusClientes: Cliente[] = carregarClientes();
+const minhasVendas: Vendas[] = carregarVendas(meusProdutos, meusClientes);
 
 export function cadastrarProduto(): void {
-    console.log("\n===== CADASTRAR PRODUTO =====");
-    console.log("1 - Livro");
-    console.log("2 - Action Figure");
-    console.log("3 - Figurinha");
-    const tipoEscolhido = Number(prompt("Escolha o tipo de produto: "));
+    console.log("\n1 - Livro | 2 - Action Figure | 3 - Figurinha");
+    const tipo = Number(prompt("Tipo de produto: "));
 
-    if (tipoEscolhido < 1 || tipoEscolhido > 3 || !Number.isFinite(tipoEscolhido)) {
-        console.log("Tipo de produto inválido.");
-        return;
-    }
+    const nome = prompt("Nome: ") || "";
+    const descricao = prompt("Descrição: ") || "";
+    const preco = Number(prompt("Preço: ") || 0);
+    const estoque = Number(prompt("Estoque: ") || 0);
 
     try {
-        const dadosBase = lerDadosBaseProduto();
-
-        if (tipoEscolhido === 1) {
+        if (tipo === 1) {
             const livro = new Livro();
             const autores = prompt("Autor(es): ") || "";
-            const dataPublicacao = prompt("Data de publicação: ") || "";
-            const paginas = Number(prompt("Número de páginas: ") || 0);
+            const dataPubli = prompt("Data de publicação: ") || "";
+            const paginas = Number(prompt("Páginas: ") || 0);
             const isbn = prompt("ISBN: ") || "";
 
-            livro.cadastrarLivro(
-                dadosBase.nome,
-                dadosBase.descricao,
-                dadosBase.preco,
-                autores,
-                dataPublicacao,
-                paginas,
-                isbn,
-                dadosBase.estoque
-            );
-            listaProdutos.push(livro);
-            console.log("Livro cadastrado com sucesso!");
-
-        } else if (tipoEscolhido === 2) {
-            const actionFigure = new ActionFigure();
+            livro.cadastrarLivro(nome, descricao, preco, autores, dataPubli, paginas, isbn, estoque);
+            meusProdutos.push(livro);
+        } else if (tipo === 2) {
+            const af = new ActionFigure();
             const franquia = prompt("Franquia: ") || "";
             const material = prompt("Material: ") || "";
 
-            actionFigure.cadastrarActionFigure(
-                dadosBase.nome,
-                dadosBase.descricao,
-                dadosBase.preco,
-                franquia,
-                material,
-                dadosBase.estoque
-            );
-            listaProdutos.push(actionFigure);
-            console.log("Action Figure cadastrada com sucesso!");
-
-        } else if (tipoEscolhido === 3) {
-            const figurinha = new Figurinha();
+            af.cadastrarActionFigure(nome, descricao, preco, material, estoque);
+            meusProdutos.push(af);
+        } else if (tipo === 3) {
+            const fig = new Figurinha();
             const colecao = prompt("Coleção: ") || "";
             const raridade = prompt("Raridade: ") || "";
 
-            figurinha.cadastrarFigurinha(
-                dadosBase.nome,
-                dadosBase.descricao,
-                dadosBase.preco,
-                colecao,
-                raridade,
-                dadosBase.estoque
-            );
-            listaProdutos.push(figurinha);
-            console.log("Figurinha cadastrada com sucesso!");
+            fig.cadastrarFigurinha(nome, descricao, preco, colecao, raridade, estoque);
+            meusProdutos.push(fig);
+        } else {
+            console.log("Tipo inválido.");
+            return;
         }
 
-        salvarProdutos(listaProdutos);
+        salvarProdutos(meusProdutos);
+        console.log("Produto cadastrado com sucesso!");
     } catch (erro: any) {
-        console.log("Erro ao cadastrar produto:", erro.message);
-    }
-}
-
-export function reporEstoque(): void {
-    console.log("\n========== REPOR ESTOQUE ==========");
-
-    if (listaProdutos.length === 0) {
-        console.log("Nenhum produto cadastrado.");
-        return;
-    }
-
-    const produtoSelecionado = selecionarProdutoPorNumero();
-
-    if (!produtoSelecionado) {
-        console.log("Erro: Produto não encontrado.");
-        return;
-    }
-
-    const quantidadeReposicao = Number(prompt(`Quantidade a adicionar em '${produtoSelecionado.nome}': `));
-
-    try {
-        produtoSelecionado.adicionarEstoque(quantidadeReposicao);
-        salvarProdutos(listaProdutos);
-        console.log(`Estoque atualizado! Novo estoque de '${produtoSelecionado.nome}': ${produtoSelecionado.estoque} unidades.`);
-    } catch (erro: any) {
-        console.log("Erro ao repor estoque:", erro.message);
+        console.log("Erro:", erro.message);
     }
 }
 
 export function mostrarProdutos(): void {
-    console.log("\n========== MOSTRUÁRIO ==========");
-
-    if (listaProdutos.length === 0) {
+    if (meusProdutos.length === 0) {
         console.log("Nenhum produto cadastrado.");
         return;
     }
 
-    exibirTabelaProdutos(listaProdutos);
+    console.table(meusProdutos.map((p, index) => ({
+        Código: index + 1,
+        Nome: p.nome,
+        Descrição: p.descricao,
+        Preço: `R$ ${p.preco.toFixed(2)}`,
+        Estoque: p.estoque
+    })));
 }
 
-export function buscarProduto(): void {
-    console.log("\n========== BUSCAR PRODUTO ==========");
-    const termoBusca = (prompt("Digite o nome do produto para buscar: ") || "").toLowerCase();
+export function reporEstoque(): void {
+    mostrarProdutos();
+    if (meusProdutos.length === 0) return;
 
-    const produtosEncontrados = listaProdutos.filter(produto =>
-        produto.nome.toLowerCase().includes(termoBusca)
-    );
+    const codigo = Number(prompt("Digite o Código do produto: ")) - 1;
+    const produto = meusProdutos[codigo];
 
-    if (produtosEncontrados.length === 0) {
-        console.log("Nenhum produto encontrado com esse nome.");
+    if (!produto) {
+        console.log("Produto não encontrado.");
         return;
     }
 
-    exibirTabelaProdutos(produtosEncontrados);
+    try {
+        const qtd = Number(prompt("Quantidade a adicionar: "));
+        produto.adicionarEstoque(qtd);
+        salvarProdutos(meusProdutos);
+        console.log("Estoque atualizado!");
+    } catch (erro: any) {
+        console.log("Erro:", erro.message);
+    }
+}
+
+export function buscarProduto(): void {
+    const busca = (prompt("Nome do produto: ") || "").toLowerCase();
+    const encontrados = meusProdutos.filter(p => p.nome.toLowerCase().includes(busca));
+
+    if (encontrados.length === 0) {
+        console.log("Nenhum produto encontrado.");
+        return;
+    }
+
+    console.table(encontrados.map(p => ({
+        Nome: p.nome,
+        Preço: `R$ ${p.preco.toFixed(2)}`,
+        Estoque: p.estoque
+    })));
 }
 
 export function cadastrarCliente(): void {
-    console.log("\n===== CADASTRAR CLIENTE =====");
-    const cpf = prompt("Digite seu CPF: ") || "";
-    const nome = prompt("Digite seu nome: ") || "";
-    const email = prompt("Digite seu email: ") || "";
-    const endereco = prompt("Digite seu endereço: ") || "";
-    const cep = prompt("Digite seu CEP: ") || "";
+    const cpf = prompt("CPF: ") || "";
+    const nome = prompt("Nome: ") || "";
+    const email = prompt("Email: ") || "";
+    const endereco = prompt("Endereço: ") || "";
+    const cep = prompt("CEP: ") || "";
 
-    const novoCliente = new Cliente();
-    novoCliente.cadastrarCliente(cpf, nome, email, endereco, cep);
+    const cliente = new Cliente();
+    cliente.cadastrarCliente(cpf, nome, email, endereco, cep);
 
-    listaClientes.push(novoCliente);
-    salvarClientes(listaClientes);
-    console.log("Cliente cadastrado com sucesso!");
+    meusClientes.push(cliente);
+    salvarClientes(meusClientes);
+    console.log("Cliente cadastrado!");
 }
 
 export function mostrarClientes(): void {
-    console.log("\n========== CLIENTES CADASTRADOS ==========");
-
-    if (listaClientes.length === 0) {
+    if (meusClientes.length === 0) {
         console.log("Nenhum cliente cadastrado.");
         return;
     }
 
-    console.table(listaClientes.map(cliente => ({
-        CPF: cliente.cpf,
-        Nome: cliente.nome,
-        Email: cliente.email,
-        Endereço: cliente.endereco,
-        CEP: cliente.cep
+    console.table(meusClientes.map(c => ({
+        CPF: c.cpf,
+        Nome: c.nome,
+        Email: c.email,
+        Endereço: c.endereco,
+        CEP: c.cep
     })));
 }
 
 export function realizarVenda(): void {
-    console.log("\n========== CARRINHO ==========");
+    const cpf = prompt("CPF do cliente: ") || "";
+    const cliente = meusClientes.find(c => c.cpf === cpf);
 
-    if (listaClientes.length === 0 || listaProdutos.length === 0) {
-        console.log("É necessário ter ao menos um cliente e um produto cadastrados.");
+    if (!cliente) {
+        console.log("Cliente não encontrado.");
         return;
     }
 
-    const cpfComprador = prompt("Digite o CPF do cliente comprador: ") || "";
-    const clienteEncontrado = listaClientes.find(cliente => cliente.cpf === cpfComprador);
+    const nomeProduto = prompt("Nome do produto: ") || "";
+    const produto = meusProdutos.find(p => p.nome.toLowerCase() === nomeProduto.toLowerCase());
 
-    if (!clienteEncontrado) {
-        console.log("Erro: Cliente não encontrado. Cadastre o cliente antes de realizar a venda.");
+    if (!produto) {
+        console.log("Produto não encontrado.");
         return;
     }
 
-    const nomeProdutoCompra = prompt("Qual produto vai comprar? ") || "";
-    const produtoEncontrado = listaProdutos.find(
-        produto => produto.nome.toLowerCase() === nomeProdutoCompra.toLowerCase()
-    );
-
-    if (!produtoEncontrado) {
-        console.log("Erro: Produto não encontrado no sistema.");
-        return;
-    }
-
-    const quantidadeCompra = Number(prompt("Quantos serão comprados? ") || 0);
+    const qtd = Number(prompt("Quantidade: "));
 
     try {
-        const novaVenda = new Vendas(produtoEncontrado, clienteEncontrado);
-        novaVenda.vender(quantidadeCompra);
+        const venda = new Vendas(produto, cliente);
+        venda.vender(qtd);
 
-        listaVendas.push(novaVenda);
-        salvarProdutos(listaProdutos);
-        salvarVendas(listaVendas);
+        minhasVendas.push(venda);
+        salvarProdutos(meusProdutos);
+        salvarVendas(minhasVendas);
 
-        console.log("\n===== RESUMO DA VENDA =====");
-        console.log(`Cliente: ${clienteEncontrado.nome} (CPF: ${clienteEncontrado.cpf})`);
-        console.log(`Produto: ${quantidadeCompra}x ${produtoEncontrado.nome}`);
-        console.log(`Total pago: R$ ${novaVenda.valorTotal.toFixed(2)}`);
+        console.log(`Venda realizada! Total: R$ ${venda.valorTotal.toFixed(2)}`);
     } catch (erro: any) {
-        console.log("Erro na venda:", erro.message);
+        console.log("Erro:", erro.message);
     }
 }
 
 export function mostrarVendas(): void {
-    console.log("\n========== HISTÓRICO DE VENDAS ==========");
-
-    if (listaVendas.length === 0) {
+    if (minhasVendas.length === 0) {
         console.log("Nenhuma venda registrada.");
         return;
     }
 
-    console.table(listaVendas.map(venda => ({
-        Data: venda.data,
-        Cliente: venda.cliente.nome,
-        CPF: venda.cliente.cpf,
-        Produto: venda.produto.nome || "(Produto removido)",
-        Quantidade: venda.quantidade,
-        Total: `R$ ${venda.valorTotal.toFixed(2)}`
+    console.table(minhasVendas.map(v => ({
+        Data: v.data,
+        Cliente: v.cliente.nome,
+        Produto: v.produto.nome,
+        Qtd: v.quantidade,
+        Total: `R$ ${v.valorTotal.toFixed(2)}`
     })));
 }
 
 export function aplicarDesconto(): void {
-    console.log("\n========== APLICAR DESCONTO ==========");
+    mostrarProdutos();
+    if (meusProdutos.length === 0) return;
 
-    if (listaProdutos.length === 0) {
-        console.log("Nenhum produto cadastrado.");
+    const codigo = Number(prompt("Digite o Código do produto: ")) - 1;
+    const produto = meusProdutos[codigo];
+
+    if (!produto) {
+        console.log("Produto não encontrado.");
         return;
     }
-
-    const produtoSelecionado = selecionarProdutoPorNumero();
-
-    if (!produtoSelecionado) {
-        console.log("Erro: Produto não encontrado.");
-        return;
-    }
-
-    const porcentagemDesconto = Number(prompt("Digite a porcentagem de desconto (1 a 100): "));
-    const precoAnterior = produtoSelecionado.preco;
 
     try {
-        produtoSelecionado.aplicarDesconto(porcentagemDesconto);
-        salvarProdutos(listaProdutos);
-
-        console.log(`\nDesconto aplicado em '${produtoSelecionado.nome}'!`);
-        console.log(`De R$ ${precoAnterior.toFixed(2)} por R$ ${produtoSelecionado.preco.toFixed(2)}`);
+        const porcentagem = Number(prompt("Porcentagem de desconto (1 a 100): "));
+        produto.aplicarDesconto(porcentagem);
+        salvarProdutos(meusProdutos);
+        console.log(`Desconto aplicado! Novo preço: R$ ${produto.preco.toFixed(2)}`);
     } catch (erro: any) {
-        console.log("Erro ao aplicar desconto:", erro.message);
+        console.log("Erro:", erro.message);
     }
 }
